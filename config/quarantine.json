@@ -1,0 +1,6 @@
+{
+    "channelPrefix":            "quarantine-",
+    "rolesToRemove":            ["Default"],
+    "solitaryConfinement":      true,
+    "sendWarningOnJoin":        true
+}
