@@ -1,6 +1,6 @@
 "use strict";
 
 module.exports = {
-    "quarantine": require('./quarantine'),
+    "suspend": require('./quarantine'),
     "unquarantine": require('./quarantine'),
 }
