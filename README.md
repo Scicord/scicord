@@ -1,5 +1,5 @@
-# SCICord
-A bot for SCICord
+# Usage
+A bot for scicord
 
 # Getting Started
 ## Setup
