@@ -1,0 +1,10 @@
+{
+    "ruleText": [
+        "Hello, welcome to teh Discrodz. This is a Christian Minecraft Server.",
+        "We believe in all things American like Jesus, Apple Pie and Lime Bud Light.",
+        "If you have read the rules of and wish to accept Jesus into your heart, send `>ihavereadtherules {{randomNumber}}` to auth."
+    ],
+    "noReauthRoles": ["Suspended"],
+    "authCategory": "welcome",
+    "roleToAdd": "Verified"
+}

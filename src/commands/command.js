@@ -26,4 +26,8 @@ module.exports = class Command
     execute = (botClient, message) => {
         return;
     }
+
+    args = (botClient, message) => {
+        return message.content.slice(botClient.prefix.length).trim().split(/ +/);
+    }
 }
