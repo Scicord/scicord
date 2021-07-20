@@ -1,6 +1,6 @@
 {
-    "channelPrefix":            "quarantine-",
-    "rolesToRemove":            ["Default"],
-    "solitaryConfinement":      true,
-    "sendWarningOnJoin":        true
+    "channelPrefix":            "quarantine",
+    "rolesToRemove":            ["Verified"],
+    "quarantineRole":           "Suspended",
+    "protectedRoles":           ["Administrator"]
 }

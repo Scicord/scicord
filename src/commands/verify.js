@@ -36,8 +36,8 @@ module.exports = class Verify extends Command
         if(!this.verifyChannel(message.channel))
             return;
     
-        const secret = args[1];
-
+        const secret = args[0];
+        
         if(!rulesSecret.secretOk(secret))
         {
             message.channel.send("Incorrect or expired verification code, please read the rules and try again.");
