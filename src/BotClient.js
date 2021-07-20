@@ -26,4 +26,11 @@ module.exports = class BotClient
         this.init();
         this.client.login(this.token);
     }
+
+    auditLog = (message) => {
+        const auditChannel = this.client.channels.cache.find(c => c.name === config.auditChannel);
+        if(!auditChannel)
+            return;
+        auditChannel.send(message);            
+    }
 };

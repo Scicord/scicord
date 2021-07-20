@@ -27,7 +27,20 @@ module.exports = class Command
         return;
     }
 
+    /// Given the message, split out the args.
     args = (botClient, message) => {
-        return message.content.slice(botClient.prefix.length).trim().split(/ +/);
+        let args = message.content.slice(botClient.prefix.length).trim().split(/ +/);
+        args.shift();
+        return args;
     }
+    
+    /// Given one of the args as a possible uid, return the user from the guild
+    getUserFromId = (userId, guild) => {
+        const REPLACE_MENTION_REGEX = /[<>!@]/g;
+        const targetDiscordUserId = userId.replace(REPLACE_MENTION_REGEX, "");
+        if(!targetDiscordUserId || targetDiscordUserId.length === 0)
+            return null;
+        return guild.member(targetDiscordUserId);            
+    }
+
 }
