@@ -2,7 +2,8 @@
   "name": "covidbot",
   "version": "1.0.0",
   "dependencies": {
-    "discord.js": ">=12.5.3"
+    "discord.js": ">=12.5.3",
+    "sqlite-async": "^1.1.1"
   },
   "description": "Bot for the COVID19 Discord",
   "main": "bot.js",

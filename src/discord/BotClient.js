@@ -1,8 +1,9 @@
 "use strict";
 
 const Discord = require("discord.js");
-const config = require('../config/config.json');
-const events = require('./events');
+const config = require('../../config/config.json');
+const events = require('../events');
+const DB = require('../db/db');
 
 module.exports = class BotClient 
 {
@@ -11,6 +12,7 @@ module.exports = class BotClient
         this.token = config.token;
         this.prefix = config.prefix;        
         this.client = new Discord.Client();
+        this.db = new DB(config);
     }
 
     init = () => {
@@ -19,6 +21,10 @@ module.exports = class BotClient
             this.client.on(eventName, (...args) => {
                 eventFn(this, ...args);
             });
+        });
+
+        this.db.init().then(res => {
+            console.log("Database is ready");
         });
     }
 
@@ -32,5 +38,9 @@ module.exports = class BotClient
         if(!auditChannel)
             return;
         auditChannel.send(message);            
+    }
+
+    punishmentLog = () => {
+        return this.db.getPunishments();
     }
 };

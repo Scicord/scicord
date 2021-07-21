@@ -79,6 +79,7 @@ module.exports = class Quarantine extends Command
             return;
         }
 
+        botClient.punishmentLog().addQuarantine(toQuarantine.id, message.author.id, qtReason);
         userRoles.set(suspendedRole.id, suspendedRole);
         toQuarantine.roles.set(userRoles).then(res => {
             channelUtils.generateIsolatedChannel(guild, channelUtils.generateUniqueChannelName(guild, Config.channelPrefix), toQuarantine, modRoles).then(channel => {

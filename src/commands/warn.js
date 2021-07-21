@@ -52,8 +52,9 @@ module.exports = class Warn extends Command
             return;
         }
 
-        // TODO: Log to database! 
         const warnReason = args.splice(1).join(" ");
+        botClient.punishmentLog().addWarn(toWarn.id, message.author.id, warnReason).catch(console.error);
+
         const warningEmbed = new MessageEmbed()
             .setTitle(`:warning: [Warn] ${toWarn.user.username}#${toWarn.user.discriminator}`)
             .setColor("#d4b350")
