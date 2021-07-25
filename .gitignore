@@ -112,3 +112,6 @@ temp/
 config.json
 
 # End of https://www.gitignore.io/api/node
+
+# For opening with IDEA products
+.idea
