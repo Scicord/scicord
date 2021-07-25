@@ -21,6 +21,7 @@ module.exports = (botClient, message) => {
 
     const split = message.content.substr(1).trim().split(/ +/g);
     const command = commandInstances[split[0]];
+    console.log("command called: " + split);
 
     if(!command)
         return;

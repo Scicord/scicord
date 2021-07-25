@@ -40,6 +40,10 @@ module.exports = class BotClient
         auditChannel.send(message);            
     }
 
+    transientChannels = () => {
+        return this.db.getTransientChannels();
+    }
+
     punishmentLog = () => {
         return this.db.getPunishments();
     }

@@ -3,8 +3,9 @@ const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
 const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
+const db = require('../db/db');
 
-module.exports = class Quarantine extends Command
+module.exports = class Suspend extends Command
 {
     botPermissionsToExecute = () => {
         return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
@@ -96,6 +97,10 @@ module.exports = class Quarantine extends Command
                 };
                 channel.send(auditMessage);
                 botClient.auditLog(auditMessage);
+
+                console.log(channel.id);
+
+                botClient.transientChannels().addQuarantine(toQuarantine.id, channel.id)
             }).catch(err => {
                 console.error(err);
                 message.channel.send({
