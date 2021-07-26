@@ -8,7 +8,7 @@
   "description": "Bot for the COVID19 Discord",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest src/tests",
     "start": "node src/bot.js"
   },
   "repository": {
@@ -20,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/freememory/scicord/issues"
   },
-  "homepage": "https://github.com/freememory/scicord#readme"
+  "homepage": "https://github.com/freememory/scicord#readme",
+  "devDependencies": {
+    "jest": "^27.0.6"
+  },
+  "jest": {
+    "bail": 1,
+    "verbose": true,
+    "testMatch": ["<rootDir>/src/tests/**/*.js"]
+  }
 }
