@@ -3,8 +3,9 @@ const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
 const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
+const TransientChannels = require('../db/transientchannels');
 
-module.exports = class Quarantine extends Command
+module.exports = class Suspend extends Command
 {
     botPermissionsToExecute = () => {
         return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
@@ -24,7 +25,7 @@ module.exports = class Quarantine extends Command
     execute = (botClient, message) => {
         const args = this.args(botClient, message);
         const guild = message.guild;
-        if(!args || args.length === 0) {
+        if(!args || args.length < 2) {
             message.channel.send({
                 embed: this.usage(true)
             });
@@ -58,6 +59,7 @@ module.exports = class Quarantine extends Command
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('The user is already suspended')
             })
+            return;
         }
 
         const userRoles = toQuarantine.roles.cache.filter(role => !Config.rolesToRemove.includes(role.name));
@@ -96,6 +98,7 @@ module.exports = class Quarantine extends Command
                 };
                 channel.send(auditMessage);
                 botClient.auditLog(auditMessage);
+                botClient.transientChannels().addChannel(channel.id, toQuarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE);
             }).catch(err => {
                 console.error(err);
                 message.channel.send({

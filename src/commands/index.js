@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = {
-    "suspend": require('./quarantine'),
-    "unquarantine": require('./quarantine'),
+    "suspend": require('./suspend'),
+    "unsuspend": require('./unsuspend'),
     "ihavereadtherules": require('./verify'),
     "warn": require('./warn')
 }
