@@ -2,7 +2,7 @@
 const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
 const { MessageEmbed } = require('discord.js')
-const db = require('../db/db');
+const TransientChannels = require('../db/transientchannels');
 
 module.exports = class Unsuspend extends Command
 {
@@ -14,20 +14,16 @@ module.exports = class Unsuspend extends Command
         return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
     }
 
-    usage = () => {
+    usage = (message) => {
         return new MessageEmbed()
-            .setTitle(this.commandName)
+            .setTitle("Unsuspend")
             .setDescription(`Usage: \`>unsuspend [mention/id] <reason>\``)
-            .setFooter("Usage instructions");
-    }
-
-    success = () => {
-
+            .setFooter(message || "");
     }
 
     error = (message) => {
         return new MessageEmbed()
-            .setTitle(this.commandName)
+            .setTitle("Unsuspend")
             .setDescription(message || "")
             .setFooter("An error has occurred")
     }
@@ -37,14 +33,14 @@ module.exports = class Unsuspend extends Command
         const guild = message.guild;
         if(!args || args.length === 0) {
             message.channel.send({
-                embed: this.error()
+                embed: this.usage("There was no user specified!")
             });
             return;
         }
 
         if(args[0] === "help") {
             message.channel.send({
-                embed: this.usage()
+                embed: this.usage("Usage instructions")
             });
             return;
         }
@@ -57,7 +53,6 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
-        const modRoles = guild.roles.cache.filter(role => role.permissions.has('MANAGE_ROLES'));
         if(toUnquarantine.roles.cache.some(role => Config.protectedRoles.includes(role.name))) {
             message.channel.send({
                 embed: this.error("The user has a protected role!")
@@ -75,13 +70,13 @@ module.exports = class Unsuspend extends Command
                     .setFooter('Technical Error - Contact Bot Authors')
             });
             message.channel.send({
-                embed: this.error('Something has gone wrong')
+                embed: this.error('Something has gone wrong!')
             })
 
             return;
         }
 
-        const defaultRole = guild.roles.cache.filter(role => !Config.rolesToRemove.includes(role.name)).first()
+        const defaultRole = guild.roles.cache.filter(role => Config.rolesToRemove.includes(role.name)).first()
         if(!defaultRole) {
             console.error("No default role found!");
             botClient.auditLog({
@@ -91,7 +86,7 @@ module.exports = class Unsuspend extends Command
                     .setFooter('Technical Error - Contact Bot Authors')
             });
             message.channel.send({
-                embed: this.error('Something has gone wrong')
+                embed: this.error('Something has gone wrong!')
             })
 
             return;
@@ -106,17 +101,28 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
-        // Remove suspension
-        var userRoles = toUnquarantine.roles.cache.filter(role => !Config.quarantineRole === role.name)
+        // Get user roles
+        let userRoles = toUnquarantine.roles.cache
+
+        // Remove Suspended role
+        userRoles = userRoles.filter(role => Config.quarantineRole !== role.name)
 
         // Add default role
-        userRoles.set(defaultRole.id, defaultRole);
+        userRoles.set(defaultRole.id, defaultRole)
 
         // After removing roles, we must delete all quarantine transient channels associated with this user.
+        let transientChannels = botClient.transientChannels()
         toUnquarantine.roles.set(userRoles).then(res => {
-            botClient.transientChannels().quarantineChannelsforUser(toUnquarantine.id).then(channels => {
-                console.log(channels);
-            });
+            transientChannels.activeChannelsForUser(toUnquarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE).then(channels => {
+                    // Find all active channels
+                    let activeChannels = channels.flatMap(channel => {
+                        transientChannels.destroyChannel(channel.id);
+                        return guild.channels.cache.get(channel.id);
+                    });
+
+                    activeChannels.forEach(activeChannel => activeChannel.delete());
+                }
+            );
         })
     }
 }

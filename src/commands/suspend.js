@@ -3,7 +3,7 @@ const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
 const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
-const db = require('../db/db');
+const TransientChannels = require('../db/transientchannels');
 
 module.exports = class Suspend extends Command
 {
@@ -25,7 +25,7 @@ module.exports = class Suspend extends Command
     execute = (botClient, message) => {
         const args = this.args(botClient, message);
         const guild = message.guild;
-        if(!args || args.length === 0) {
+        if(!args || args.length < 2) {
             message.channel.send({
                 embed: this.usage(true)
             });
@@ -97,10 +97,8 @@ module.exports = class Suspend extends Command
                 };
                 channel.send(auditMessage);
                 botClient.auditLog(auditMessage);
-
-                console.log(channel.id);
-
-                botClient.transientChannels().addQuarantine(toQuarantine.id, channel.id)
+                console.log("bog");
+                botClient.transientChannels().addChannel(channel.id, toQuarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE);
             }).catch(err => {
                 console.error(err);
                 message.channel.send({
