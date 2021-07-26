@@ -1,4 +1,6 @@
-module.exports = class BotClient
+const BotClient = '../../discord/BotClient';
+
+module.exports = class BotClientMock
 {
     constructor(config) { }
 
