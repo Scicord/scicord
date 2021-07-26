@@ -17,7 +17,7 @@ module.exports = class Unsuspend extends Command
     usage = (message) => {
         return new MessageEmbed()
             .setTitle("Unsuspend")
-            .setDescription(`Usage: \`>unsuspend [mention/id] <reason>\``)
+            .setDescription(`Usage: \`>unsuspend [mention/id]\``)
             .setFooter(message || "");
     }
 

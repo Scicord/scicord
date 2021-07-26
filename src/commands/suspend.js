@@ -59,6 +59,7 @@ module.exports = class Suspend extends Command
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('The user is already suspended')
             })
+            return;
         }
 
         const userRoles = toQuarantine.roles.cache.filter(role => !Config.rolesToRemove.includes(role.name));
