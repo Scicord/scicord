@@ -45,21 +45,7 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
-        const toUnquarantine = this.getUserFromId(args[0], guild);
-        if(!toUnquarantine) {
-            message.channel.send({
-                embed: this.error("User could not be found!")
-            });
-            return;
-        }
-
-        if(toUnquarantine.roles.cache.some(role => Config.protectedRoles.includes(role.name))) {
-            message.channel.send({
-                embed: this.error("The user has a protected role!")
-            });
-        }
-
-        // Check for these two roles
+        // Check for suspended role to exist
         const suspendedRole = guild.roles.cache.filter(role => Config.quarantineRole === role.name).first();
         if(!suspendedRole) {
             console.error("No suspended role found!");
@@ -76,6 +62,7 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
+        // Check for default role to exist
         const defaultRole = guild.roles.cache.filter(role => Config.rolesToRemove.includes(role.name)).first()
         if(!defaultRole) {
             console.error("No default role found!");
@@ -92,6 +79,24 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
+        // Unsuspend user
+        const toUnquarantine = this.getUserFromId(args[0], guild);
+        if(!toUnquarantine) {
+            message.channel.send({
+                embed: this.error("User could not be found!")
+            });
+            return;
+        }
+
+        // Do not do anything if the user is a protected role
+        const userProtected = toUnquarantine.roles.cache.some(role => Config.protectedRoles.includes(role.name));
+        if(userProtected) {
+            message.channel.send({
+                embed: this.error("The user has a protected role!")
+            });
+        }
+
+        // Check to see the user's role to see if they are suspended
         const userSuspended = toUnquarantine.roles.cache.filter(role => Config.quarantineRole === role.name).first()
         if (!userSuspended) {
             message.channel.send({
@@ -120,6 +125,7 @@ module.exports = class Unsuspend extends Command
                         return guild.channels.cache.get(channel.id);
                     });
 
+                    // Delete all channels
                     activeChannels.forEach(activeChannel => activeChannel.delete());
                 }
             );
