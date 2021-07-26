@@ -98,7 +98,6 @@ module.exports = class Suspend extends Command
                 };
                 channel.send(auditMessage);
                 botClient.auditLog(auditMessage);
-                console.log("bog");
                 botClient.transientChannels().addChannel(channel.id, toQuarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE);
             }).catch(err => {
                 console.error(err);
