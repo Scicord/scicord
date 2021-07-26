@@ -5,14 +5,14 @@ const config = require('../../config/config.json');
 const events = require('../events');
 const DB = require('../db/db');
 
-module.exports = class BotClient 
+module.exports = class BotClient
 {
-    constructor(config)
+    constructor(config, db = new DB(config))
     {
         this.token = config.token;
         this.prefix = config.prefix;        
         this.client = new Discord.Client();
-        this.db = new DB(config);
+        this.db = db;
     }
 
     init = () => {
