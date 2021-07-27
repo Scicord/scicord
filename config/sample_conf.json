@@ -2,5 +2,6 @@
     "token": "<SECRET REPLACE ME>",
     "prefix": "!",
     "auditChannel": "technical-spam",
-    "dbPath": ":memory:"
+    "dbPath": ":memory:",
+    "webToken":  "GENERATE ME WITH require('crypto').randomBytes(64).toString('base64')"
 }

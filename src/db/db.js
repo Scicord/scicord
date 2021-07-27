@@ -17,27 +17,9 @@ module.exports = class DB {
 
     createTables = () => {
         return Promise.all([
-            this.createTransientChannelsTable(),
-            this.createPunishmentLogTable(),
+            this.getTransientChannels().createTable(),
+            this.getPunishments().createTable()
         ]);
-    }
-
-    createTransientChannelsTable = () => {
-        return this.db.run(`CREATE TABLE IF NOT EXISTS transient_channel (
-            id TEXT UNIQUE,
-            user TEXT,
-            type TEXT,
-            time_created INTEGER DEFAULT CURRENT_TIMESTAMP,
-            time_destroyed INTEGER)`);
-    }
-
-    createPunishmentLogTable = () => {
-        return this.db.run(`CREATE TABLE IF NOT EXISTS punishment (
-            user TEXT,
-            issuer TEXT,
-            type TEXT,
-            reason TEXT,
-            time_created INTEGER DEFAULT CURRENT_TIMESTAMP)`)
     }
 
     getTransientChannels = () => {
