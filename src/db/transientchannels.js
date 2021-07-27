@@ -15,8 +15,8 @@ module.exports = class TransientChannels extends Entity {
             id TEXT UNIQUE,
             user TEXT,
             type TEXT,
-            time_created INTEGER DEFAULT CURRENT_TIMESTAMP,
-            time_destroyed INTEGER)`);
+            time_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+            time_destroyed DATETIME)`);
     }
 
     addChannel = (channel, user, type) => {

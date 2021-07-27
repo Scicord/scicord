@@ -1,5 +1,7 @@
 "use strict";
 
+const log = require('../utils/logger')();
+
 module.exports = (client) => {
-    console.log('Bot has started');
+    log.info('Bot has started');
 };

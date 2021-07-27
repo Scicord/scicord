@@ -4,6 +4,7 @@ const Config = require('../../config/command/quarantine.json')
 const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
 const TransientChannels = require('../db/transientchannels');
+const log = require('../utils/logger')();
 
 module.exports = class Suspend extends Command
 {
@@ -49,6 +50,8 @@ module.exports = class Suspend extends Command
         
         const modRoles = guild.roles.cache.filter(role => role.permissions.has('MANAGE_ROLES'));
         if(toQuarantine.roles.cache.some(role => Config.protectedRoles.includes(role.name))) {
+            log.warn(`${message.author.user.username}#${message.author.user.discriminator}` +
+            `Attempting to suspend ${toQuarantine.user.username}#${toQuarantine.user.discriminator} but target has protected role`);
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('The user has a protected role')
             });
@@ -56,6 +59,8 @@ module.exports = class Suspend extends Command
         }
 
         if(toQuarantine.roles.cache.filter(role => Config.quarantineRole === role.name).first()) {
+            log.warn(`${message.author.user.username}#${message.author.user.discriminator}` +
+            `Attempting to suspend ${toQuarantine.user.username}#${toQuarantine.user.discriminator} but target already suspended`);
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('The user is already suspended')
             })
@@ -67,7 +72,7 @@ module.exports = class Suspend extends Command
         const qtReason = args.splice(1).join(' ');
 
         if(!suspendedRole) {
-            console.error("No suspended role found!");
+            log.error(`No suspended role named ${Config.quarantineRole} found!`);
             botClient.auditLog({
                 embed: new MessageEmbed()
                     .setTitle('Suspend')
@@ -80,7 +85,8 @@ module.exports = class Suspend extends Command
 
             return;
         }
-
+        
+        log.info(`Successfully suspended ${toQuarantine.user.username}#${toQuarantine.user.discriminator}!`);
         botClient.punishmentLog().addQuarantine(toQuarantine.id, message.author.id, qtReason);
         userRoles.set(suspendedRole.id, suspendedRole);
         toQuarantine.roles.set(userRoles).then(res => {
@@ -100,13 +106,13 @@ module.exports = class Suspend extends Command
                 botClient.auditLog(auditMessage);
                 botClient.transientChannels().addChannel(channel.id, toQuarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE);
             }).catch(err => {
-                console.error(err);
+                log.error(err);
                 message.channel.send({
                     embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('Error suspending user')
                 })    
             });
         }).catch(err => {
-            console.error(err);
+            log.error(err);
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('Error suspending user')
             })
