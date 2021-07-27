@@ -30,6 +30,6 @@ module.exports = class Punishments extends Entity {
             issuer TEXT,
             type TEXT,
             reason TEXT,
-            time_created INTEGER DEFAULT CURRENT_TIMESTAMP)`)
+            time_created DATETIME DEFAULT CURRENT_TIMESTAMP)`)
     }
 }

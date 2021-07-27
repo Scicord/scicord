@@ -4,6 +4,8 @@ const Discord = require("discord.js");
 const config = require('../../config/config.json');
 const events = require('../events');
 const DB = require('../db/db');
+const log = require('../utils/logger')();
+
 
 module.exports = class BotClient 
 {
@@ -17,14 +19,14 @@ module.exports = class BotClient
 
     init = () => {
         Object.entries(events).forEach(([eventName, eventFn]) => {
-            console.log(`Setting up callback for ${eventName}`);
+            log.info(`Setting up callback for ${eventName}`);
             this.client.on(eventName, (...args) => {
                 eventFn(this, ...args);
             });
         });
 
         this.db.init().then(res => {
-            console.log("Database is ready");
+            log.info("Database is ready");
         });
     }
 

@@ -1,6 +1,8 @@
 "use strict";
 
 const commands = require('../commands');
+const logger = require('../utils/logger');
+const log = require('../utils/logger')();
 const commandInstances = {};
 Object.entries(commands).forEach(([key, clz]) => {
     commandInstances[key] = new clz();
@@ -16,23 +18,25 @@ module.exports = (botClient, message) => {
     
     // Only channel messages
     if(!message.guild) {
+        logger.warn('Ignoring non-guild message');
         return;
     }
 
     const split = message.content.substr(1).trim().split(/ +/g);
     const command = commandInstances[split[0]];
 
+    log.info(`Received request to run ${split[0]}`)
     if(!command)
         return;
 
     // Permission check!
     if(!command.canIExecute(message.guild)) {
-        console.error(`Insufficient privileges to execute ${split[0]}`);
+        log.warn(`Insufficient privileges to execute ${split[0]}`)        
         return;
     }
 
     if(!command.canUserExecute(message.member)) {
-        console.error(`User ${message.member.displayName} (id: ${message.member.id}) tried to ${split[0]}, but does not have permission`);
+        log.warn(`User ${message.member.displayName} (id: ${message.member.id}) tried to ${split[0]}, but does not have permission`);
         return;
     }
 

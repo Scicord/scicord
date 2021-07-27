@@ -1,3 +1,5 @@
+const log = require('./logger')();
+
 const generateUniqueChannelName = (guild, channelPrefix) => {
     const maxChannel = guild.channels.cache.filter(channel => channel.name.startsWith(channelPrefix + '-'))
         .map(channel => parseInt(channel.name.split('-')[1], 10)).sort().pop() || 0;
@@ -11,6 +13,8 @@ const generateIsolatedChannel = (guild, channelName, guildMember, modRoles) => {
         id: role.id,
         allow: ['VIEW_CHANNEL', 'SEND_MESSAGES']
     }));
+
+    log.info(`Generating isolated channel ${channelName} for ${guildMember.user.username}#${guildMember.user.discriminator}`);
 
     return guild.channels.create(channelName, {
         type: 'text',
