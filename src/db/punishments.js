@@ -1,40 +1,35 @@
 "use strict";
 
-module.exports = class Punishments {
+const Entity = require("./entity");
+
+module.exports = class Punishments extends Entity {
     static PUNISHMENT_TYPE_WARN = 'warn';
     static PUNISHMENT_TYPE_QUARANTINE = 'quarantine';
 
     constructor(db) {
-        this.db = db;
+        super(db);
     }
     
     addWarn = (user, issuer, reason) => {
-        return this.db.prepare(`INSERT INTO punishment (user,issuer,type,reason) VALUES (?,?,?,?)`)
-            .then(stmt => {
-                return stmt.run(user, issuer, Punishments.PUNISHMENT_TYPE_WARN, reason).then(res => {
-                    stmt.finalize();
-                    return res;
-                })
-            });
+        return this.prepareAndRun(`INSERT INTO punishment (user,issuer,type,reason) VALUES (?,?,?,?)`,
+            user, issuer, Punishments.PUNISHMENT_TYPE_WARN, reason);
     }
 
     addQuarantine = (user, issuer, reason) => {
-        return this.db.prepare(`INSERT INTO punishment (user,issuer,type,reason) VALUES (?,?,?,?)`)
-            .then(stmt => {
-                return stmt.run(user, issuer, Punishments.PUNISHMENT_TYPE_QUARANTINE, reason).then(res => {
-                    stmt.finalize();
-                    return res;
-                });
-            });
+        return this.prepareAndRun(`INSERT INTO punishment (user,issuer,type,reason) VALUES (?,?,?,?)`, 
+            user, issuer, Punishments.PUNISHMENT_TYPE_QUARANTINE, reason);
     }
 
     punishmentsForUser = (user) => {
-        return this.db.prepare(`SELECT * from punishment WHERE user=?`)
-            .then(stmt => {
-                return stmt.all(user).then(res => {
-                    stmt.finalize();
-                    return res;
-                })
-            });
+        return this.prepareAndQuery(`SELECT * from punishment WHERE user=?`, user);
+    }
+
+    createTable = () => {
+        return this.db.run(`CREATE TABLE IF NOT EXISTS punishment (
+            user TEXT,
+            issuer TEXT,
+            type TEXT,
+            reason TEXT,
+            time_created INTEGER DEFAULT CURRENT_TIMESTAMP)`)
     }
 }
