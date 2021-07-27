@@ -1,5 +1,5 @@
 {
-    "token": "",
+    "token": "<SECRET REPLACE ME> ",
     "prefix": ">",
     "auditChannel": "technical-spam",
     "dbPath": ":memory:"
