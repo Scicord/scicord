@@ -1,6 +1,6 @@
 {
-    "token": "<SECRET REPLACE ME>",
-    "prefix": "!",
+    "token": "",
+    "prefix": ">",
     "auditChannel": "technical-spam",
     "dbPath": ":memory:"
 }
