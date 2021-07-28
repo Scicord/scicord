@@ -1,7 +1,6 @@
 "use strict";
 
 const commands = require('../commands');
-const logger = require('../utils/logger');
 const log = require('../utils/logger')();
 const commandInstances = {};
 Object.entries(commands).forEach(([key, clz]) => {
@@ -18,7 +17,7 @@ module.exports = (botClient, message) => {
     
     // Only channel messages
     if(!message.guild) {
-        logger.warn('Ignoring non-guild message');
+        log.warn('Ignoring non-guild message');
         return;
     }
 
