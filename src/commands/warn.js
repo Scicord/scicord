@@ -3,6 +3,7 @@ const Config = require('../../config/command/warn.json')
 const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
 const log = require('../utils/logger')();
+const userUtils = require('../utils/userUtils');
 
 module.exports = class Warn extends Command
 {
@@ -48,7 +49,7 @@ module.exports = class Warn extends Command
 
         if(toWarn.roles.cache.some(role => Config.protectedRoles.includes(role.name))) {
             log.warn(`${message.author.user.username}#${message.author.user.discriminator}` +
-            `Attempting to warn ${toWarn.user.username}#${toWarn.user.discriminator} but target has protected role`);
+            `Attempting to warn ${userUtils.userLabel(toWarn)} but target has protected role`);
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Warn').setFooter('An error has occurred').setDescription('The user has a protected role')
             });
@@ -59,7 +60,7 @@ module.exports = class Warn extends Command
         botClient.punishmentLog().addWarn(toWarn.id, message.author.id, warnReason).catch(console.error);
 
         const warningEmbed = new MessageEmbed()
-            .setTitle(`:warning: [Warn] ${toWarn.user.username}#${toWarn.user.discriminator}`)
+            .setTitle(`:warning: [Warn] ${userUtils.userLabel(toWarn)}`)
             .setColor("#d4b350")
             .setDescription(`Reason: ${warnReason}`);
         
@@ -68,10 +69,10 @@ module.exports = class Warn extends Command
             embed: warningEmbed
         });
 
-        log.info(`Successfully warned ${toWarn.user.username}#${toWarn.user.discriminator}`);
+        log.info(`Successfully warned ${userUtils.userLabel(toWarn)}`);
         botClient.auditLog({
             embed: new MessageEmbed()
-                .setTitle(`:warning: [Warn] ${toWarn.user.username}#${toWarn.user.discriminator}`)
+                .setTitle(`:warning: [Warn] ${userUtils.userLabel(toWarn)}`)
                 .setThumbnail(toWarn.user.displayAvatarURL())
                 .addField("User", toWarn, true)
                 .setColor("#d4b350")

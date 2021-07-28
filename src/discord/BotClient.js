@@ -49,4 +49,8 @@ module.exports = class BotClient
     punishmentLog = () => {
         return this.db.getPunishments();
     }
+
+    authTable = () => {
+        return this.db.getAuth();
+    }
 };

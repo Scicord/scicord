@@ -6,7 +6,8 @@
     "sqlite-async": "^1.1.1",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "log4js": "^6.3.0"
+    "log4js": "^6.3.0",
+    "body-parser": "^1.19.0"
   },
   "description": "Bot for the COVID19 Discord",
   "main": "bot.js",

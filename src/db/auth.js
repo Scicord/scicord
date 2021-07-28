@@ -18,13 +18,25 @@ module.exports = class Auth extends Entity
             valid_seconds INTEGER)`);
     }
 
-    createToken = (token, guild, user, otp, validFor = 60 * 60) => {
-        return this.prepareAndRun(`INSERT INTO auth (guild, user, otp, token, valid_seconds) VALUES (?,?,?,?,?)`,
-            guild, user, otp, token, validFor);
+    createOtp = (guild, user, otp, validFor = 60 * 60) => {
+        return this.prepareAndRun(`INSERT INTO auth (guild, user, otp, valid_seconds) VALUES (?,?,?,?)`,
+            guild, user, otp, validFor);
+    }
+
+    updateToken = (guild,user,otp,token) => {
+        return this.prepareAndRun('UPDATE auth SET token=? WHERE guild=? AND user=? AND otp=?', 
+            token, guild, user, otp);
     }
 
     revokeTokenForGuildMember = (guild, user) => {
         return this.prepareAndRun(`UPDATE auth SET valid_seconds=0 WHERE guild=? AND user=?`, guild, user);
+    }
+
+    isTokenValid = (token) => {
+        return this.prepareAndQuery(`SELECT count(*) as cnt FROM auth WHERE token=? AND (datetime('now', 'localtime') - datetime(time_created, 'localtime')) < valid_seconds`,
+            token).then(r => {
+                return r[0].cnt > 0;
+            });
     }
 
     getValidToken = (guild, user) => {
