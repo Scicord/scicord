@@ -4,15 +4,18 @@ const channelUtils = require('../utils/channelUtils');
 const { MessageEmbed } = require('discord.js');
 const log = require('../utils/logger')();
 const userUtils = require('../utils/userUtils');
+const CommandConfig = require('../config/commandConfig');
 
 module.exports = class Warn extends Command
 {
-    botPermissionsToExecute = () => {
-        return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
+    constructor()
+    {
+        super();
+        this.config = new CommandConfig(Config);
     }
 
-    userPermissionsToExecute = () => {
-        return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
+    commandConfig = () => {
+        return this.config;
     }
 
     usage = (isError) => {
@@ -47,9 +50,11 @@ module.exports = class Warn extends Command
             return;
         }            
 
-        if(toWarn.roles.cache.some(role => Config.protectedRoles.includes(role.name))) {
-            log.warn(`${message.author.user.username}#${message.author.user.discriminator}` +
-            `Attempting to warn ${userUtils.userLabel(toWarn)} but target has protected role`);
+        const {protectedRoles} = this.commandConfig().getConfig();
+        const userIsProtected = this.commandConfig().permissionFn(protectedRoles, toWarn);
+
+        if(userIsProtected()) {
+            log.warn(`${userUtils.userLabel(message.member)} Attempting to warn ${userUtils.userLabel(toWarn)} but target has protected role`);
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Warn').setFooter('An error has occurred').setDescription('The user has a protected role')
             });

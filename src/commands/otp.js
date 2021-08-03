@@ -1,13 +1,16 @@
 const Command = require('./command');
 const { MessageEmbed } = require('discord.js');
+const CommandConfig = require('../config/commandConfig');
 
 module.exports = class OTP extends Command {
-    botPermissionsToExecute = () => {
-        return [];
+    constructor()
+    {
+        super();
+        this.config = new CommandConfig(require('../../config/command/otp.json'));
     }
 
-    userPermissionsToExecute = () => {
-        return ['BAN_MEMBERS'];
+    commandConfig = () => {
+        return this.config;
     }
 
     usage = (isError) => {

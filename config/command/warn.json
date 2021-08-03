@@ -1,3 +1,5 @@
 {
-    "protectedRoles":           ["Administrator"]
+    "protectedRoles":           "hasRole(\"Overseer\")",
+    "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
+    "userExecuteExpression": "hasPermission(\"MANAGE_ROLES\") and hasPermission(\"MANAGE_CHANNELS\")"
 }
