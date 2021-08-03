@@ -3,31 +3,31 @@ const Command = require('./command');
 const Config = require('../../config/command/ihavereadtherules.json');
 const rulesSecret = require('../utils/rulesSecret');
 const userUtils = require('../utils/userUtils');
+const CommandConfig = require('../config/commandConfig');
 const log = require('../utils/logger')();
 
 module.exports = class Verify extends Command
 {
-    botPermissionsToExecute = () => {
-        return ['MANAGE_ROLES'];
+    constructor()
+    {
+        super();
+        this.config = new CommandConfig(Config);
     }
 
-    userPermissionsToExecute = () => {
-        return [];
-    }
-
-    /// True if the user can execute. Expects a GuildMember object.
-    canUserExecute = (guildMember) => {
-        return guildMember.roles.cache.every(role => !Config.noReauthRoles.includes(role.name));
+    commandConfig = () => {
+        return this.config;
     }
 
     verifyChannel = (guildChannel) => {
+        const { authCategory } = this.commandConfig().getConfig();
+
         if(guildChannel.type !== 'text')
             return false;
         
-        if(!guildChannel.name.startsWith(Config.authCategory))    
+        if(!guildChannel.name.startsWith(authCategory))    
             return false;
         
-        if(!guildChannel.parent || guildChannel.parent.name !== Config.authCategory)
+        if(!guildChannel.parent || guildChannel.parent.name !== authCategory)
             return false;
         
         return true;
@@ -35,9 +35,10 @@ module.exports = class Verify extends Command
 
     execute = (botClient, message) => {
         const args = this.args(botClient, message);
+        const { roleToAdd } = this.commandConfig().getConfig();
         if(!this.verifyChannel(message.channel))
         {
-            log.warn(`User ${userUtils.userLabel(message.author)} attempting to verify in non-welcome channel`);
+            log.warn(`User ${userUtils.userLabel(message.member)} attempting to verify in non-welcome channel`);
             return;
         }
     
@@ -46,13 +47,13 @@ module.exports = class Verify extends Command
         if(!rulesSecret.secretOk(secret))
         {
             message.channel.send("Incorrect or expired verification code, please read the rules and try again.");
-            log.info(`User ${userUtils.userLabel(message.author)} failed to verify!`);
+            log.info(`User ${userUtils.userLabel(message.member)} failed to verify!`);
             rulesSecret.greet(message.channel, message.member);
             return;
         }
                 
-        const roleToAdd = message.guild.roles.cache.find(role => Config.roleToAdd === role.name);
-        message.member.roles.add(roleToAdd);
+        const role = message.guild.roles.cache.find(role => roleToAdd === role.name);
+        message.member.roles.add(role);
         log.info(`User ${userUtils.userLabel(message.author)} has verified`);
         message.channel.delete('User has authorized').then(console.log(`User ${message.member.id} authorized, deleting #${message.channel.name}`)).catch(console.error);
     }

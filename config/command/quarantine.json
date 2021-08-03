@@ -2,5 +2,7 @@
     "channelPrefix":            "quarantine",
     "rolesToRemove":            ["Verified"],
     "quarantineRole":           "Suspended",
-    "protectedRoles":           ["Administrator"]
+    "protectedRoles":           "hasRole(\"Administrator\")",
+    "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
+    "userExecuteExpression": "hasPermission(\"MANAGE_ROLES\") and hasPermission(\"MANAGE_CHANNELS\")"
 }

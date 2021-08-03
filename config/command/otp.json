@@ -1,0 +1,4 @@
+{
+    "botPermissionsToExecute": [],
+    "userExecuteExpression": "hasPermission(\"BAN_MEMBERS\")"
+}

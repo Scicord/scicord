@@ -1,17 +1,20 @@
 "use strict";
 const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
+const CommandConfig = require('../config/commandConfig');
 const { MessageEmbed } = require('discord.js')
 const TransientChannels = require('../db/transientchannels');
 
 module.exports = class Unsuspend extends Command
 {
-    botPermissionsToExecute = () => {
-        return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
+    constructor()
+    {
+        super();
+        this.config = new CommandConfig(Config);
     }
 
-    userPermissionsToExecute = () => {
-        return ['MANAGE_ROLES', 'MANAGE_CHANNELS'];
+    commandConfig = () => {
+        return this.config;
     }
 
     usage = (message) => {
@@ -45,14 +48,16 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
+        const {protectedRoles, quarantineRole, rolesToRemove, channelPrefix} = this.commandConfig().getConfig();
+
         // Check for suspended role to exist
-        const suspendedRole = guild.roles.cache.filter(role => Config.quarantineRole === role.name).first();
+        const suspendedRole = guild.roles.cache.filter(role => quarantineRole === role.name).first();
         if(!suspendedRole) {
             console.error("No suspended role found!");
             botClient.auditLog({
                 embed: new MessageEmbed()
                     .setTitle('Suspend')
-                    .setDescription(`No role with name ${Config.quarantineRole} was found - unable to suspend!`)
+                    .setDescription(`No role with name ${quarantineRole} was found - unable to suspend!`)
                     .setFooter('Technical Error - Contact Bot Authors')
             });
             message.channel.send({
@@ -63,13 +68,13 @@ module.exports = class Unsuspend extends Command
         }
 
         // Check for default role to exist
-        const defaultRole = guild.roles.cache.filter(role => Config.rolesToRemove.includes(role.name)).first()
+        const defaultRole = guild.roles.cache.filter(role => rolesToRemove.includes(role.name)).first()
         if(!defaultRole) {
             console.error("No default role found!");
             botClient.auditLog({
                 embed: new MessageEmbed()
                     .setTitle('Suspend')
-                    .setDescription(`No role with name ${Config.rolesToRemove} was found - unable to suspend!`)
+                    .setDescription(`No role with name ${rolesToRemove} was found - unable to suspend!`)
                     .setFooter('Technical Error - Contact Bot Authors')
             });
             message.channel.send({
@@ -88,16 +93,8 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
-        // Do not do anything if the user is a protected role
-        const userProtected = toUnquarantine.roles.cache.some(role => Config.protectedRoles.includes(role.name));
-        if(userProtected) {
-            message.channel.send({
-                embed: this.error("The user has a protected role!")
-            });
-        }
-
         // Check to see the user's role to see if they are suspended
-        const userSuspended = toUnquarantine.roles.cache.filter(role => Config.quarantineRole === role.name).first()
+        const userSuspended = toUnquarantine.roles.cache.filter(role => quarantineRole === role.name).first()
         if (!userSuspended) {
             message.channel.send({
                 embed: this.error('User is not suspended!')
@@ -110,7 +107,7 @@ module.exports = class Unsuspend extends Command
         let userRoles = toUnquarantine.roles.cache
 
         // Remove Suspended role
-        userRoles = userRoles.filter(role => Config.quarantineRole !== role.name)
+        userRoles = userRoles.filter(role => quarantineRole !== role.name)
 
         // Add default role
         userRoles.set(defaultRole.id, defaultRole)
