@@ -3,7 +3,7 @@ module.exports = class BotRoute {
         this.botClient = botClient;
     }
     
-    route = (req, res, next) => {
+    createRoutes = (app) => {
         throw new Error("Not implemented here");
     }
 }

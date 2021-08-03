@@ -6,7 +6,7 @@ module.exports = class CreateUserToken extends BotRoute {
         super(botClient);
     }
 
-    createRoute = (app) => {
+    createRoutes = (app) => {
         app.post('/api/v1/createUserToken', this.route);
     }
 
