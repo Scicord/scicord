@@ -8,7 +8,7 @@ const initWeb = (botClient) => {
     app.use(bodyParser.json());
     Object.entries(routes).forEach(([key, clz]) => {
         const routeInstance = new clz(botClient);
-        routeInstance.createRoute(app);
+        routeInstance.createRoutes(app);
     });
     app.listen(8080, () => {
         log.info('Server listening on port 8080');

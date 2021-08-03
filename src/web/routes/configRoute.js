@@ -6,7 +6,7 @@ module.exports = class ConfigRoute extends AuthRoute {
         super(botClient);
     }    
 
-    createRoute = (app) => {
+    createRoutes = (app) => {
         app.get('/api/v1/config/:command', this.authenticateToken, this.route);
     }
 
