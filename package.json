@@ -27,6 +27,8 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6",
+    "jest-sinon": "^1.0.4",
+    "sinon": "^11.1.1",
     "ts-jest": "^27.0.4"
   },
   "jest": {
@@ -34,6 +36,9 @@
     "verbose": true,
     "testMatch": [
       "<rootDir>/src/tests/**/*.js"
+    ],
+    "setupFilesAfterEnv": [
+      "jest-sinon"
     ]
   },
   "babel": {

@@ -7,11 +7,12 @@ const DB = require('../db/db');
 
 module.exports = class BotClient
 {
-    constructor(config, db = new DB(config))
+    constructor(config, client = new Discord.Client(), db = new DB(config))
     {
         this.token = config.token;
-        this.prefix = config.prefix;        
-        this.client = new Discord.Client();
+        this.prefix = config.prefix;
+        
+        this.client = client;
         this.db = db;
     }
 

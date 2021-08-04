@@ -1,8 +1,10 @@
-const BotClient = '../../discord/BotClient';
+const BotClient = require('../../discord/BotClient');
 
-module.exports = class BotClientMock
+module.exports = class BotClientMock extends BotClient
 {
-    constructor(config) { }
+    constructor(config) {
+        super(config, null, null);
+    }
 
     init = () => {}
 
