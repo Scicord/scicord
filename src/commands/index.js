@@ -5,5 +5,6 @@ module.exports = {
     "unsuspend": require('./unsuspend'),
     "otp": require('./otp'),
     "ihavereadtherules": require('./verify'),
-    "warn": require('./warn')
+    "warn": require('./warn'),
+    "history": require('./history')
 }
