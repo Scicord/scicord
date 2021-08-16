@@ -1,8 +1,10 @@
 "use strict";
 const Command = require('./command');
 const { MessageEmbed } = require('discord.js');
+const userUtils = require('../utils/userUtils');
 const CommandConfig = require('../config/commandConfig');
-const serverConfig = require('../../config/server.json');
+const log = require('../utils/logger')();
+const ServerConfig = require('../../config/server.json');
 
 module.exports = class Ban extends Command {
     constructor()
@@ -43,9 +45,26 @@ module.exports = class Ban extends Command {
         const toBan = this.getUserFromId(args[0], guild);
         const banReason = args.splice(1).join(' ');
 
+        const {protectedRoles} = this.commandConfig().getConfig();
+        const userIsProtected = this.commandConfig().permissionFn(protectedRoles, toBan);
+        if(userIsProtected()) {
+            log.warn(`${userUtils.userLabel(message.member)} Attempting to ban ${userUtils.userLabel(toBan)} but target has protected role`);
+            message.channel.send({
+                embed: new MessageEmbed().setTitle('Ban')
+                    .setFooter('An error has occurred')
+                    .setDescription('The user has a protected role')
+            });
+            return;
+        }
+
         toBan.ban({ reason: banReason }).then((member) => {
-            toBan.send(`You have been banned from ${serverConfig.name} for \`${banReason}\`.`)
             botClient.punishmentLog().addQuarantine(toBan.id, message.author.id, banReason);
+
+            message.channel.send({
+                embed: new MessageEmbed().setTitle('Ban')
+                    .setTitle(`:hammer: [Ban] ${userUtils.userLabel(toBan)}`)
+                    .setDescription(`Reason: ${banReason}`)
+            });
         });
     }
 };
