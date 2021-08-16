@@ -6,5 +6,6 @@ module.exports = {
     "otp": require('./otp'),
     "ihavereadtherules": require('./verify'),
     "warn": require('./warn'),
-    "history": require('./history')
+    "history": require('./history'),
+    "ban": require('./ban')
 }

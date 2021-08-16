@@ -1,15 +1,11 @@
 "use strict";
 const Command = require('./command');
 const Config = require('../../config/command/quarantine.json')
-const channelUtils = require('../utils/channelUtils');
 const userUtils = require('../utils/userUtils');
 const { MessageEmbed } = require('discord.js');
-const TransientChannels = require('../db/transientchannels');
 const CommandConfig = require('../config/commandConfig');
-const log = require('../utils/logger')();
 
-
-module.exports = class Suspend extends Command {
+module.exports = class History extends Command {
     constructor() {
         super();
         this.config = new CommandConfig(Config);
@@ -54,8 +50,6 @@ module.exports = class Suspend extends Command {
             if (punishmentsCount === 1) {
                 description = `The last punishment for <@${toSeeHistory.id}>`
             }
-
-            console.log(punishments)
 
             punishments.forEach(function (punishment, i) {
                 let type = "Warn"
