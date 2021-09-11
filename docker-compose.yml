@@ -1,0 +1,11 @@
+version: '3.2'
+services:
+  scicord:
+    build: .
+    restart: always
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+    logging:
+      options:
+        max-size: 50m
