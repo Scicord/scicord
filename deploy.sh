@@ -14,12 +14,6 @@ if [[ $(git status -s) ]]; then
   shouldInstallNewCode=false
 fi
 
-currentBranch=$(git rev-parse --abbrev-ref HEAD)
-if [[ "$currentBranch" != "master" ]]; then
-  echo 'Skipping code update, not on master.'
-  shouldInstallNewCode=false
-fi
-
 unpushedCommits=$(git status -sb | grep "behind")
 if [[ -z "$unpushedCommits" ]]; then
   echo "No code changes were found on remote."
