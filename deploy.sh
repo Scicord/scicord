@@ -14,6 +14,9 @@ if [[ $(git status -s) ]]; then
   shouldInstallNewCode=false
 fi
 
+# Update remote before we check
+git remote update
+
 remoteCommits=$(git status -sb | grep "behind")
 if [[ -z "$remoteCommits" ]]; then
   echo "No code changes were found on remote."
