@@ -29,12 +29,15 @@ fi
 # Install new code
 if $shouldInstallNewCode ; then
   # Stop the container if there is any running
+  echo "Stopping container..."
   docker-compose down --rmi all || true
 
   # Pull down new code
+  echo "Pulling new code (if any)..."
   git pull origin
 
   # Start up container again
+  echo "Starting container..."
   docker-compose pull --include-deps
   docker-compose up -d --build --force-recreate --remove-orphans
 fi
