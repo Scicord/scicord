@@ -14,8 +14,8 @@ if [[ $(git status -s) ]]; then
   shouldInstallNewCode=false
 fi
 
-unpushedCommits=$(git status -sb | grep "behind")
-if [[ -z "$unpushedCommits" ]]; then
+remoteCommits=$(git status -sb | grep "behind")
+if [[ -z "$remoteCommits" ]]; then
   echo "No code changes were found on remote."
   shouldInstallNewCode=false
 fi
@@ -31,6 +31,15 @@ if $shouldInstallNewCode ; then
   git pull origin
 
   # Start up container again
+  echo "Restarting container..."
+  docker-compose pull --include-deps
+  docker-compose up -d --build --force-recreate --remove-orphans
+fi
+
+# If service is not up, start it
+service=$(basename "$PWD")
+hasContainerRunning=$(docker ps | grep "$service")
+if [[ -z "$hasContainerRunning" ]]; then
   echo "Starting container..."
   docker-compose pull --include-deps
   docker-compose up -d --build --force-recreate --remove-orphans
