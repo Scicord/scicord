@@ -25,3 +25,16 @@ if [[ $unpushedCommits ]]; then
   echo "Skipping code update, master has unpushed commits"
   shouldInstallNewCode=false
 fi
+
+# Install new code
+if $shouldInstallNewCode ; then
+  # Stop the container if there is any running
+  docker-compose down --rmi all || true
+
+  # Pull down new code
+  git pull origin
+
+  # Start up container again
+  docker-compose pull --include-deps
+  docker-compose up -d --build --force-recreate --remove-orphans
+fi
