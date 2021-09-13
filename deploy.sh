@@ -14,9 +14,15 @@ if [[ $(git status -s) ]]; then
   shouldInstallNewCode=false
 fi
 
-unpushedCommits=$(git log origin/master..master)
-if [[ $unpushedCommits ]]; then
-  echo "Skipping code update, master has unpushed commits"
+currentBranch=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$currentBranch" != "master" ]]; then
+  echo 'Skipping code update, not on master.'
+  shouldInstallNewCode=false
+fi
+
+unpushedCommits=$(git status -sb | grep "behind")
+if [[ -z "$unpushedCommits" ]]; then
+  echo "No code changes were found on remote."
   shouldInstallNewCode=false
 fi
 
@@ -27,7 +33,7 @@ if $shouldInstallNewCode ; then
   docker-compose down --rmi all || true
 
   # Pull down new code
-  echo "Pulling new code (if any)..."
+  echo "Pulling new code.."
   git pull origin
 
   # Start up container again
