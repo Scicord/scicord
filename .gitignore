@@ -115,3 +115,9 @@ config.json
 
 # For opening with IDEA products
 .idea
+
+# Server
+db
+
+# Mac ignores
+.DS_Store
