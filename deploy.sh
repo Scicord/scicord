@@ -1,6 +1,12 @@
+#!/bin/bash
+
 # deploy.sh
 # Use this script to start up. This will check to see if there are any updates to master.
 # Note: Please use a cron on this every x minutes
+
+# Make directory where script is current directory
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
 
 shouldInstallNewCode=true
 
