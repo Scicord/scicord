@@ -42,14 +42,12 @@ module.exports = class Stuckchannel extends Command
         stuckChannels.forEach(channel => {
             transientChannels.inactiveChannel(channel.id).then(inactiveChannels => {
                 // We only destroy channels that do not have a ban/suspended user in there
-                if (inactiveChannels.length === 0) {
+                if (inactiveChannels.length > 0) {
                     log.info(`Deleting #${channel.name} (${channel.id})`);
-
-                    transientChannels.destroyChannel(channel.id);
                     channel.delete();
                 }
             });
-        })
+        });
 
         log.info(`Successfully removed any stuck channels!`);
         botClient.auditLog({
