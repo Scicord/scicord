@@ -69,7 +69,7 @@ module.exports = class Ban extends Command {
             log.info(`Successfully banned ${userUtils.userLabel(toBan)}`);
             botClient.auditLog({
                 embed: new MessageEmbed()
-                    .setTitle(`:warning: [Ban] ${userUtils.userLabel(toBan)}`)
+                    .setTitle(`:hammer: [Ban] ${userUtils.userLabel(toBan)}`)
                     .setThumbnail(toBan.user.displayAvatarURL())
                     .addField("User", toBan, true)
                     .setColor("#d4b350")
