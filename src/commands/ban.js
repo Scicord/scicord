@@ -76,7 +76,7 @@ module.exports = class Ban extends Command {
                     .addField("Moderator", message.author, true)
                     .addField("Reason", banReason, true)
                     .setTimestamp()
-            })
+            });
         });
     }
 };
