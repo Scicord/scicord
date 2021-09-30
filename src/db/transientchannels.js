@@ -33,6 +33,10 @@ module.exports = class TransientChannels extends Entity {
         return this.prepareAndQuery(`SELECT * from transient_channel WHERE user=? AND type=?`, user, type);
     }
 
+    inactiveChannel = (channel) => {
+        return this.prepareAndQuery(`SELECT * from transient_channel WHERE id=? AND time_destroyed IS NOT NULL`, channel);
+    }
+
     activeChannelsForUser = (user, type) => {
         return this.prepareAndQuery(`SELECT * from transient_channel WHERE user=? AND type=? AND time_destroyed IS NULL`, user, type);
     }

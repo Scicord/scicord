@@ -3,6 +3,7 @@ const Command = require('./command');
 const { MessageEmbed } = require('discord.js');
 const userUtils = require('../utils/userUtils');
 const CommandConfig = require('../config/commandConfig');
+const TransientChannels = require('../db/transientchannels');
 const log = require('../utils/logger')();
 const ServerConfig = require('../../config/server.json');
 
@@ -57,7 +58,13 @@ module.exports = class Ban extends Command {
             return;
         }
 
+        const transientChannels = botClient.transientChannels()
         toBan.ban({ reason: banReason }).then((member) => {
+            // Destroy all quarantine channels for this user
+            transientChannels.channelsForUser(toBan.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE).then(channels => {
+                channels.forEach(channel => transientChannels.destroyChannel(channel.id));
+            });
+
             botClient.punishmentLog().addQuarantine(toBan.id, message.author.id, banReason);
 
             message.channel.send({
