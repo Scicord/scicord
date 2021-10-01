@@ -7,5 +7,6 @@ module.exports = {
     "ihavereadtherules": require('./verify'),
     "warn": require('./warn'),
     "history": require('./history'),
-    "ban": require('./ban')
+    "ban": require('./ban'),
+    "report": require('./report')
 }
