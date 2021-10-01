@@ -77,6 +77,11 @@ module.exports = class Ban extends Command {
                     .addField("Reason", banReason, true)
                     .setTimestamp()
             });
+        }).catch(err => {
+            log.error(err);
+            message.channel.send({
+                embed: new MessageEmbed().setTitle('Ban').setFooter('An error has occurred').setDescription('Error banning user')
+            })
         });
     }
 };
