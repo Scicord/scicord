@@ -8,5 +8,6 @@ module.exports = {
     "warn": require('./warn'),
     "history": require('./history'),
     "ban": require('./ban'),
-    "report": require('./report')
+    "report": require('./report'),
+    "stuckchannel": require('./stuckchannel')
 }
