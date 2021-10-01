@@ -72,6 +72,23 @@ module.exports = class Ban extends Command {
                     .setTitle(`:hammer: [Ban] ${userUtils.userLabel(toBan)}`)
                     .setDescription(`Reason: ${banReason}`)
             });
+
+            log.info(`Successfully banned ${userUtils.userLabel(toBan)}`);
+            botClient.auditLog({
+                embed: new MessageEmbed()
+                    .setTitle(`:hammer: [Ban] ${userUtils.userLabel(toBan)}`)
+                    .setThumbnail(toBan.user.displayAvatarURL())
+                    .addField("User", toBan, true)
+                    .setColor("#d4b350")
+                    .addField("Moderator", message.author, true)
+                    .addField("Reason", banReason, true)
+                    .setTimestamp()
+            });
+        }).catch(err => {
+            log.error(err);
+            message.channel.send({
+                embed: new MessageEmbed().setTitle('Ban').setFooter('An error has occurred').setDescription('Error banning user')
+            })
         });
     }
 };
