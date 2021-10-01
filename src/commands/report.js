@@ -53,27 +53,28 @@ module.exports = class Report extends Command {
         const toReport = this.getUserFromId(args[0], guild);
         const reportChannel = guild.channels.cache.find(c => c.name === channel);
 
-        // You can't report yourself
+        // User is attempting to report themselves
         if (message.author.id === toReport.id) {
             message.channel.send({
                 embed: this.error("You can't report yourself.")
             });
             return;
         }
-        // Notify user that we have received their report
+
+        // Notify channel that we have received their report
         message.channel.send(reportMessage);
 
         // If there is no report channel configured, just return safely
         if(!reportChannel)
             return;
 
-        var messageReported = `:mag_right: **Reported** ${userUtils.userLabel(toReport)} (ID ${toReport.id})`
-        var messageReason = `:page_facing_up: **Reason** ${reportReason} ([Logs](${message.url}))`
-        var messageChannel = `**Channel** <#${message.channel.id}>`
+        const messageReported = `:mag_right: **Reported** ${userUtils.userLabel(toReport)} (ID ${toReport.id})`
+        const messageReason = `:page_facing_up: **Reason** ${reportReason} ([Logs](${message.url}))`
+        const messageChannel = `**Channel** <#${message.channel.id}>`
 
         reportChannel.send({
             embed: new MessageEmbed()
-                .setAuthor(`${message.author.username}#${message.author.discriminator} (ID ${message.author.id})`, message.author.displayAvatarURL(), 'https://discord.js.org')
+                .setAuthor(`${message.author.username}#${message.author.discriminator} (ID ${message.author.id})`, message.author.displayAvatarURL())
                 .setThumbnail(toReport.user.displayAvatarURL())
                 .setColor("#e977e4")
                 .setDescription(`${messageReported}\n${messageReason}\n${messageChannel}`)
