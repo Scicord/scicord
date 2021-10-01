@@ -69,8 +69,8 @@ module.exports = class Report extends Command {
             return;
 
         const messageReported = `:mag_right: **Reported** ${userUtils.userLabel(toReport)} (ID ${toReport.id})`
-        const messageReason = `:page_facing_up: **Reason** ${reportReason} ([Logs](${message.url}))`
-        const messageChannel = `**Channel** <#${message.channel.id}>`
+        const messageReason = `:page_facing_up: **Reason:** ${reportReason} ([Logs](${message.url}))`
+        const messageChannel = `**Channel:** <#${message.channel.id}>`
 
         reportChannel.send({
             embed: new MessageEmbed()
