@@ -96,6 +96,14 @@ module.exports = class Suspend extends Command
         userRoles.set(suspendedRole.id, suspendedRole);
         toQuarantine.roles.set(userRoles).then(res => {
             channelUtils.generateIsolatedChannel(guild, channelUtils.generateUniqueChannelName(guild, channelPrefix), toQuarantine, modRoles).then(channel => {
+
+                // Send message to channel that author is currently in for success
+                message.channel.send({
+                    embed: new MessageEmbed().setTitle('Suspend')
+                        .setDescription('The user has been suspended.')
+                        .setFooter('Success!')
+                })
+
                 channel.send(`You have been quarantined, <@${toQuarantine.id}>. Attempting to re-rank as Default or leave the server will result in an instant ban. A mod will join presently.` );
                 const auditMessage = {
                     embed: new MessageEmbed()
@@ -114,7 +122,7 @@ module.exports = class Suspend extends Command
                 log.error(err);
                 message.channel.send({
                     embed: new MessageEmbed().setTitle('Suspend').setFooter('An error has occurred').setDescription('Error suspending user')
-                })    
+                })
             });
         }).catch(err => {
             log.error(err);
