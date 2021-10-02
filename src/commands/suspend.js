@@ -96,7 +96,6 @@ module.exports = class Suspend extends Command
         userRoles.set(suspendedRole.id, suspendedRole);
         toQuarantine.roles.set(userRoles).then(res => {
             channelUtils.generateIsolatedChannel(guild, channelUtils.generateUniqueChannelName(guild, channelPrefix), toQuarantine, modRoles).then(channel => {
-
                 // Send message to channel that author is currently in for success
                 message.channel.send({
                     embed: new MessageEmbed().setTitle('Suspend')
