@@ -1,7 +1,7 @@
 {
   "channel"                 : "reports",
   "reportMessage"           : "User reported to the proper authorities!",
-  "protectedRoles"          : "hasRole(\"Overseer\")",
+  "protectedRoles"          : "hasRole(\"Admin\") or hasRole(\"Founder\") or hasRole(\"Moderator\")",
   "botPermissionsToExecute" : ["MANAGE_ROLES", "MANAGE_CHANNELS"],
   "userExecuteExpression"   : "hasPermission(\"VIEW_CHANNELS\") and hasPermission(\"SEND_MESSAGES\")"
 }

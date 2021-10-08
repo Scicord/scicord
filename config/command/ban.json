@@ -1,5 +1,5 @@
 {
-  "protectedRoles":           "hasRole(\"Overseer\")",
+  "protectedRoles":           "hasRole(\"Admin\") or hasRole(\"Founder\") or hasRole(\"Moderator\")",
   "botPermissionsToExecute": ["BAN_MEMBERS", "KICK_MEMBERS"],
   "userExecuteExpression": "hasPermission(\"BAN_MEMBERS\") and hasPermission(\"KICK_MEMBERS\")"
 }
