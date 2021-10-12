@@ -50,11 +50,5 @@ module.exports = class Stuckchannel extends Command
         });
 
         log.info(`Successfully removed any stuck channels!`);
-        botClient.auditLog({
-            embed: new MessageEmbed()
-                .setTitle('Stuck Channel')
-                .setDescription(`Channels with prefix \`${channelPrefix}\` were removed!`)
-                .addField("Moderator", message.author, false)
-        });
     }
 };

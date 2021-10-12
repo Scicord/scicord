@@ -1,8 +1,8 @@
 {
     "channelPrefix":            "quarantine",
-    "rolesToRemove":            ["Verified"],
-    "quarantineRole":           "Suspended",
-    "protectedRoles":           "hasRole(\"Overseer\")",
+    "rolesToRemove":            ["Member"],
+    "quarantineRole":           "Donut",
+    "protectedRoles":           "hasRole(\"Admin\") or hasRole(\"Founder\") or hasRole(\"Moderator\")",
     "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
     "userExecuteExpression": "hasPermission(\"MANAGE_ROLES\") and hasPermission(\"MANAGE_CHANNELS\")"
 }
