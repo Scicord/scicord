@@ -6,5 +6,5 @@
     "authCategory": "welcome",
     "roleToAdd": "Member",
     "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
-    "userExecuteExpression": "not hasRole(\"Suspended\")"
+    "userExecuteExpression": "not hasRole(\"Donut\")"
 }
