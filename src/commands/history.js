@@ -57,6 +57,10 @@ module.exports = class History extends Command {
                     type = "Quarantine"
                 }
 
+                if (punishment.type === 'ban') {
+                    type = "Ban"
+                }
+
                 var reason = punishment.reason
                 if (!reason || reason === "") {
                     reason = "No reason specified."

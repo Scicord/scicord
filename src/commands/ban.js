@@ -65,7 +65,7 @@ module.exports = class Ban extends Command {
                 channels.forEach(channel => transientChannels.destroyChannel(channel.id));
             });
 
-            botClient.punishmentLog().addQuarantine(toBan.id, message.author.id, banReason);
+            botClient.punishmentLog().addBan(toBan.id, message.author.id, banReason);
 
             message.channel.send({
                 embed: new MessageEmbed().setTitle('Ban')

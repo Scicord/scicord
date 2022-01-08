@@ -20,14 +20,10 @@ module.exports = class Verify extends Command
 
     verifyChannel = (guildChannel) => {
         const { authCategory } = this.commandConfig().getConfig();
-
         if(guildChannel.type !== 'text')
             return false;
         
         if(!guildChannel.name.startsWith(authCategory))    
-            return false;
-        
-        if(!guildChannel.parent || guildChannel.parent.name !== authCategory)
             return false;
         
         return true;
@@ -54,7 +50,7 @@ module.exports = class Verify extends Command
                 
         const role = message.guild.roles.cache.find(role => roleToAdd === role.name);
         message.member.roles.add(role);
-        log.info(`User ${userUtils.userLabel(message.author)} has verified`);
+        log.info(`User ${userUtils.userLabel(message.member)} has verified`);
         message.channel.delete('User has authorized').then(console.log(`User ${message.member.id} authorized, deleting #${message.channel.name}`)).catch(console.error);
     }
 }

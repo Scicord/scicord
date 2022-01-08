@@ -123,7 +123,7 @@ module.exports = class Unsuspend extends Command
                     });
 
                     // Delete all channels
-                    activeChannels.forEach(activeChannel => activeChannel.delete());
+                    activeChannels.forEach(activeChannel => { if (activeChannel) activeChannel.delete() });
                 }
             );
         })

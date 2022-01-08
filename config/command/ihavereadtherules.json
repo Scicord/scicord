@@ -1,10 +1,10 @@
 {
     "ruleText": [
-        "Welcome to Science and Dragons.",
+        "Welcome to Epidemiology & Public Health.",
         "Entering `>ihavereadtherules {{randomNumber}}` means you acknowledge that you have read the rules and accept them."
     ],
     "authCategory": "welcome",
     "roleToAdd": "Member",
     "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
-    "userExecuteExpression": "hasRole(\"everyone\") and not hasRole(\"Suspended\")"
+    "userExecuteExpression": "not hasRole(\"Suspended\")"
 }
