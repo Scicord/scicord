@@ -30,7 +30,7 @@ module.exports = class Suspend extends Command
     execute = (botClient, message) => {
         const args = this.args(botClient, message);
         const guild = message.guild;
-        if(!args || args.length < 1) {
+        if(!args || args.length < 2) {
             message.channel.send({
                 embed: this.usage(true)
             });
