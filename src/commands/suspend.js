@@ -5,6 +5,7 @@ const channelUtils = require('../utils/channelUtils');
 const userUtils = require('../utils/userUtils');
 const { MessageEmbed } = require('discord.js');
 const TransientChannels = require('../db/transientchannels');
+const TemporaryRoles = require('../db/temporaryroles');
 const CommandConfig = require('../config/commandConfig');
 const log = require('../utils/logger')();
 
@@ -52,7 +53,7 @@ module.exports = class Suspend extends Command
             return;
         }            
         
-        const {protectedRoles, quarantineRole, rolesToRemove, channelPrefix} = this.commandConfig().getConfig();
+        const {protectedRoles, quarantineRole, defaultRole, optionalRoles, channelPrefix} = this.commandConfig().getConfig();
         const userIsProtected = this.commandConfig().permissionFn(protectedRoles, toQuarantine);
 
         const modRoles = guild.roles.cache.filter(role => role.permissions.has('MANAGE_ROLES'));
@@ -72,7 +73,8 @@ module.exports = class Suspend extends Command
             return;
         }
 
-        const userRoles = toQuarantine.roles.cache.filter(role => !rolesToRemove.includes(role.name));
+        const userRoles = toQuarantine.roles.cache.filter(role => role.name !== defaultRole && !optionalRoles.includes(role.name));
+        const optionalRolesRemoved = toQuarantine.roles.cache.filter(role => optionalRoles.includes(role.name));
         const suspendedRole = guild.roles.cache.filter(role => quarantineRole === role.name).first();
         const qtReason = args.splice(1).join(' ');
 
@@ -90,6 +92,11 @@ module.exports = class Suspend extends Command
 
             return;
         }
+
+        // Add optional roles removed to database to be added later
+        optionalRolesRemoved.forEach(optionalRole => {
+            botClient.temporaryRoles().addTemporaryRole(toQuarantine.id, optionalRole.name);
+        })
         
         log.info(`Successfully suspended ${userUtils.userLabel(toQuarantine)}!`);
         botClient.punishmentLog().addQuarantine(toQuarantine.id, message.author.id, qtReason);

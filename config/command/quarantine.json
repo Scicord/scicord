@@ -1,6 +1,7 @@
 {
     "channelPrefix":            "quarantine",
-    "rolesToRemove":            ["Member", "Public Health", "Epidemiology"],
+    "defaultRole":              "Member",
+    "optionalRoles":             ["Public Health", "Epidemiology"],
     "quarantineRole":           "Donut",
     "protectedRoles":           "hasRole(\"Admin\") or hasRole(\"Moderator\")",
     "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],

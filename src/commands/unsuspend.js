@@ -48,7 +48,7 @@ module.exports = class Unsuspend extends Command
             return;
         }
 
-        const {protectedRoles, quarantineRole, rolesToRemove, channelPrefix} = this.commandConfig().getConfig();
+        const {protectedRoles, quarantineRole, defaultRole, channelPrefix} = this.commandConfig().getConfig();
 
         // Check for suspended role to exist
         const suspendedRole = guild.roles.cache.filter(role => quarantineRole === role.name).first();
@@ -68,13 +68,13 @@ module.exports = class Unsuspend extends Command
         }
 
         // Check for default role to exist
-        const defaultRole = guild.roles.cache.filter(role => rolesToRemove.includes(role.name)).first()
-        if(!defaultRole) {
+        const defaultRoleAdd = guild.roles.cache.filter(role => role.name === defaultRole).first()
+        if(!defaultRoleAdd) {
             console.error("No default role found!");
             botClient.auditLog({
                 embed: new MessageEmbed()
                     .setTitle('Suspend')
-                    .setDescription(`No role with name ${rolesToRemove} was found - unable to suspend!`)
+                    .setDescription(`No role with name ${defaultRole} was found - unable to suspend!`)
                     .setFooter('Technical Error - Contact Bot Authors')
             });
             message.channel.send({
@@ -110,22 +110,38 @@ module.exports = class Unsuspend extends Command
         userRoles = userRoles.filter(role => quarantineRole !== role.name)
 
         // Add default role
-        userRoles.set(defaultRole.id, defaultRole)
+        userRoles.set(defaultRoleAdd.id, defaultRoleAdd)
 
-        // After removing roles, we must delete all quarantine transient channels associated with this user.
-        let transientChannels = botClient.transientChannels()
-        toUnquarantine.roles.set(userRoles).then(res => {
-            transientChannels.activeChannelsForUser(toUnquarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE).then(channels => {
-                    // Find all active channels
-                    let activeChannels = channels.flatMap(channel => {
-                        transientChannels.destroyChannel(channel.id);
-                        return guild.channels.cache.get(channel.id);
-                    });
+        botClient.temporaryRoles().getTemporaryRoles(toUnquarantine.id).then(temporaryRoles => {
+                let activeRoles = temporaryRoles.flatMap(temporaryRole => {
+                    return guild.roles.cache.find(role => role.name === temporaryRole.role)
+                });
 
-                    // Delete all channels
-                    activeChannels.forEach(activeChannel => { if (activeChannel) activeChannel.delete() });
-                }
-            );
-        })
+                activeRoles.forEach(activeRole => {
+                    if (activeRole) {
+                        userRoles.set(activeRole.id, activeRole)
+                    }
+                });
+
+                // Remove all temporary roles
+                botClient.temporaryRoles().removeTemporaryRoles(toUnquarantine.id)
+
+                // After removing roles, we must delete all quarantine transient channels associated with this user.
+                let transientChannels = botClient.transientChannels()
+                toUnquarantine.roles.set(userRoles).then(res => {
+                    transientChannels.activeChannelsForUser(toUnquarantine.id, TransientChannels.TRANSIENT_CHANNEL_TYPE_QUARANTINE).then(channels => {
+                            // Find all active channels
+                            let activeChannels = channels.flatMap(channel => {
+                                transientChannels.destroyChannel(channel.id);
+                                return guild.channels.cache.get(channel.id);
+                            });
+
+                            // Delete all channels
+                            activeChannels.forEach(activeChannel => { if (activeChannel) activeChannel.delete() });
+                        }
+                    );
+                })
+            }
+        );
     }
 }

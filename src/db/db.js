@@ -3,6 +3,7 @@ const EventEmitter = require('events').EventEmitter;
 const TransientChannels = require('./transientchannels');
 const Punishments = require('./punishments');
 const Auth = require('./auth');
+const TemporaryRoles = require('./temporaryroles');
 
 module.exports = class DB {
     constructor(config) {
@@ -20,7 +21,8 @@ module.exports = class DB {
         return Promise.all([
             this.getTransientChannels().createTable(),
             this.getPunishments().createTable(),
-            this.getAuth().createTable()
+            this.getAuth().createTable(),
+            this.getTemporaryRoles().createTable()
         ]);
     }
 
@@ -34,5 +36,9 @@ module.exports = class DB {
     
     getPunishments = () => {
         return new Punishments(this.db);
+    }
+
+    getTemporaryRoles = () => {
+        return new TemporaryRoles(this.db);
     }
 };

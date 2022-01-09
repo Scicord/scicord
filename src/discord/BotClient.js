@@ -57,4 +57,8 @@ module.exports = class BotClient
     authTable = () => {
         return this.db.getAuth();
     }
+
+    temporaryRoles = () => {
+        return this.db.getTemporaryRoles()
+    }
 };
