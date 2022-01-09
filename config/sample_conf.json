@@ -3,5 +3,8 @@
     "prefix": ">",
     "auditChannel": "technical-spam",
     "dbPath": ":memory:",
-    "webToken":  "GENERATE ME WITH require('crypto').randomBytes(64).toString('base64')"
+    "webToken":  "GENERATE ME WITH require('crypto').randomBytes(64).toString('base64')",
+    "disableEvents": [
+        "guildMemberAdd"
+    ]
 }

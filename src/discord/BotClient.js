@@ -15,10 +15,14 @@ module.exports = class BotClient
         this.prefix = config.prefix;        
         this.client = new Discord.Client();
         this.db = new DB(config);
+        this.disableEvents = config.disableEvents;
     }
 
     init = () => {
         Object.entries(events).forEach(([eventName, eventFn]) => {
+            if (this.disableEvents && this.disableEvents.includes(eventName))
+                return
+
             log.info(`Setting up callback for ${eventName}`);
             this.client.on(eventName, (...args) => {
                 eventFn(this, ...args);
