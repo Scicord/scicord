@@ -1,0 +1,29 @@
+{
+  "name": "covidbot",
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "discord.js": ">=12.5.3",
+    "express": "^4.17.1",
+    "filtrex": "^2.2.3",
+    "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.3.0",
+    "sqlite-async": "^1.1.1"
+  },
+  "description": "Bot for the COVID19 Discord",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freememory/scicord.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freememory/scicord/issues"
+  },
+  "homepage": "https://github.com/freememory/scicord#readme"
+}

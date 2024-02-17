@@ -1,0 +1,10 @@
+{
+    "token": "<SECRET REPLACE ME> ",
+    "prefix": ">",
+    "auditChannel": "<AUDIT CHANNEL>",
+    "dbPath": ":memory:",
+    "webToken":  "GENERATE ME WITH require('crypto').randomBytes(64).toString('base64')",
+    "disableEvents": [
+        "guildMemberAdd"
+    ]
+}

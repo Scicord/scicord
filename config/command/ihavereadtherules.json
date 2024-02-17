@@ -1,0 +1,10 @@
+{
+    "ruleText": [
+        "<WELCOME TEXT>",
+        "Entering `>ihavereadtherules {{randomNumber}}` means you acknowledge that you have read the rules and accept them."
+    ],
+    "authCategory": "welcome",
+    "roleToAdd": "Member",
+    "botPermissionsToExecute": ["MANAGE_ROLES", "MANAGE_CHANNELS"],
+    "userExecuteExpression": "not hasRole(\"<ROLE>\")"
+}
